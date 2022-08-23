@@ -3,16 +3,22 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<queryString language="SQL">
+	<queryString>
 		<![CDATA[SELECT *FROM tb_barang]]>
 	</queryString>
-	<field name="Id" class="java.lang.Integer">
+	<field name="id_kabel" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="nama_barang" class="java.lang.String">
+	<field name="nama_kabel" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="kategori" class="java.lang.String">
+	<field name="type_kabel" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="jumlah_core" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nomor_rak" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="jumlah" class="java.lang.Integer">
@@ -66,25 +72,25 @@
 				<reportElement x="0" y="22" width="555" height="20" uuid="df0b55be-05f2-4676-889d-6d07499e2ee0"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="10" y="22" width="100" height="20" uuid="6e395e06-931a-4d3a-8cd3-30366007b775"/>
+				<reportElement x="10" y="22" width="51" height="20" uuid="6e395e06-931a-4d3a-8cd3-30366007b775"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Id]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="110" y="22" width="233" height="20" uuid="69a3c246-15bf-4790-ab1d-070daef06fed"/>
+				<reportElement x="61" y="22" width="182" height="20" uuid="69a3c246-15bf-4790-ab1d-070daef06fed"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[NAMA BARANG]]></text>
+				<text><![CDATA[NAMA KABEL]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="343" y="22" width="100" height="20" uuid="bd8dc209-7406-43ec-9960-89b423269fd2"/>
+				<reportElement x="243" y="22" width="100" height="20" uuid="bd8dc209-7406-43ec-9960-89b423269fd2"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[KATEGORI]]></text>
+				<text><![CDATA[TYPE KABEL]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="443" y="22" width="100" height="20" uuid="47cb5b6c-9e0e-4a55-88ab-3a4c6ddd23c9"/>
@@ -92,6 +98,13 @@
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[JUMLAH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="343" y="22" width="100" height="20" uuid="0f7bde53-e837-4759-bb8c-84e3e32519b1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[JUMLAH CORE]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -101,24 +114,29 @@
 				<reportElement x="0" y="0" width="555" height="20" uuid="80c44522-b127-4b31-9879-3cb516f78673"/>
 			</rectangle>
 			<textField>
-				<reportElement x="10" y="0" width="100" height="20" uuid="77ac29fe-0497-4e7b-bf63-235af65422fa"/>
+				<reportElement x="10" y="0" width="51" height="20" uuid="77ac29fe-0497-4e7b-bf63-235af65422fa"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{Id}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{id_kabel}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="110" y="0" width="233" height="20" uuid="f3872a3f-9ce7-47ad-93cd-fa35f616ad95"/>
+				<reportElement x="61" y="0" width="182" height="20" uuid="f3872a3f-9ce7-47ad-93cd-fa35f616ad95"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{nama_barang}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nama_kabel}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="343" y="0" width="100" height="20" uuid="ff651bf8-2642-4c60-b0f9-54eb51820271"/>
+				<reportElement x="243" y="0" width="100" height="20" uuid="ff651bf8-2642-4c60-b0f9-54eb51820271"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{kategori}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{type_kabel}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="443" y="0" width="100" height="20" uuid="3b4c6989-2351-4666-810a-4ab45ff4dc1d"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{jumlah}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="343" y="0" width="100" height="20" uuid="82a772e6-bb81-431c-bea5-bdac188610e2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{jumlah_core}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

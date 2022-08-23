@@ -11,6 +11,18 @@ package Model;
  */
 public class tb_barang {
     int Id;
+    String rak;
+
+     
+    public String getRak() {
+        return rak;
+    }
+
+    public void setRak(String rak) {
+        this.rak = rak;
+    }
+    
+    
 
     public int getId() {
         return Id;

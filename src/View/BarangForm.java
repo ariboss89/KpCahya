@@ -22,9 +22,9 @@ public class BarangForm extends javax.swing.JFrame {
     int Id;
     String nama, alamat, kontak;
     String[][] res;
-    String[] namaKolom = {"ID", "NAMA", "KATEGORI", "JUMLAH"};
+    String[] namaKolom = {"ID KABEL", "NAMA KABEL", "TYPE KABEL", "JUMLAH CORE","NOMOR RAK", "STOK"};
     int jmlKolom = namaKolom.length;
-    int[] lebar = {200, 500, 700, 200};
+    int[] lebar = {200, 500, 300, 200,300, 300};
     
     public BarangForm() {
         initComponents();
@@ -32,11 +32,14 @@ public class BarangForm extends javax.swing.JFrame {
     }
 
     void New(){
+        txtNama.requestFocus();
         txtNama.setText("");
         txtJumlah.setText("0");
         btnSave.setEnabled(true);
         btnUpdate.setEnabled(false);
-        jComboBox1.setSelectedIndex(0);
+        cbTypeKabel.setSelectedIndex(0);
+        cbJumlahCore.setSelectedIndex(0);
+        cbRakKabel.setSelectedIndex(0);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -53,7 +56,7 @@ public class BarangForm extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         txtJumlah = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        cbTypeKabel = new javax.swing.JComboBox<>();
         btnSave = new javax.swing.JButton();
         btnUpdate = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
@@ -61,6 +64,11 @@ public class BarangForm extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         btnDelete1 = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        cbJumlahCore = new javax.swing.JComboBox<>();
+        jLabel8 = new javax.swing.JLabel();
+        cbRakKabel = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -73,7 +81,7 @@ public class BarangForm extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("NAMA BARANG");
+        jLabel1.setText("NAMA KABEL");
 
         txtNama.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -83,7 +91,7 @@ public class BarangForm extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("KATEGORI BARANG");
+        jLabel2.setText("TYPE KABEL");
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -92,10 +100,11 @@ public class BarangForm extends javax.swing.JFrame {
         txtJumlah.setEditable(false);
         txtJumlah.setText("0");
 
-        jComboBox1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PILIH", "KABEL" }));
+        cbTypeKabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        cbTypeKabel.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PILIH", "G-652", "G-655" }));
 
         btnSave.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/diskette24px.png"))); // NOI18N
         btnSave.setText("SAVE");
         btnSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -104,6 +113,7 @@ public class BarangForm extends javax.swing.JFrame {
         });
 
         btnUpdate.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnUpdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/edit24px.png"))); // NOI18N
         btnUpdate.setText("UPDATE");
         btnUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -112,9 +122,16 @@ public class BarangForm extends javax.swing.JFrame {
         });
 
         btnDelete.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/delete24px.png"))); // NOI18N
         btnDelete.setText("DELETE");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         btnNew.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/refresh24px.png"))); // NOI18N
         btnNew.setText("NEW");
         btnNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -141,10 +158,39 @@ public class BarangForm extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         btnDelete1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnDelete1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/printer24px.png"))); // NOI18N
         btnDelete1.setText("CETAK");
         btnDelete1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelete1ActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("METER");
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("JUMLAH CORE");
+
+        cbJumlahCore.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        cbJumlahCore.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PILIH", "24 Core", "48 Core" }));
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("RAK KABEL");
+
+        cbRakKabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        cbRakKabel.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PILIH", "1 A", "1 B", "1 C", "1 D", "2 A", "2 B", "2 C", "2 D" }));
+        cbRakKabel.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbRakKabelItemStateChanged(evt);
+            }
+        });
+        cbRakKabel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbRakKabelActionPerformed(evt);
             }
         });
 
@@ -155,58 +201,70 @@ public class BarangForm extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
-                        .addContainerGap())
+                    .addComponent(cbTypeKabel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cbJumlahCore, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtNama)
+                    .addComponent(btnNew, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+                    .addComponent(btnDelete1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cbRakKabel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(txtJumlah)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel5))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel8)
                             .addComponent(jLabel3))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtNama, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtJumlah, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnDelete1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btnNew)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(467, 467, 467))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 717, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel2)
-                .addGap(11, 11, 11)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtJumlah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSave)
-                    .addComponent(btnUpdate)
-                    .addComponent(btnNew))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnDelete)
-                    .addComponent(btnDelete1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel2)
+                        .addGap(11, 11, 11)
+                        .addComponent(cbTypeKabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel4)
+                        .addGap(11, 11, 11)
+                        .addComponent(cbJumlahCore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbRakKabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtJumlah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnNew)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnSave)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnUpdate)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnDelete1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnDelete)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1))
                 .addContainerGap())
         );
 
@@ -214,11 +272,11 @@ public class BarangForm extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -243,10 +301,14 @@ public class BarangForm extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(txtNama.getText().equals("")){
             JOptionPane.showMessageDialog(null, "Nama Barang Tidak Boleh Kosong !");
-        }else if(jComboBox1.getSelectedIndex()==0){
+        }else if(cbTypeKabel.getSelectedIndex()==0){
+            JOptionPane.showMessageDialog(null, "Silahkan Pilih Kategori !!");
+        }else if(cbJumlahCore.getSelectedIndex()==0){
+            JOptionPane.showMessageDialog(null, "Silahkan Pilih Kategori !!");
+        }else if(cbRakKabel.getSelectedIndex()==0){
             JOptionPane.showMessageDialog(null, "Silahkan Pilih Kategori !!");
         }else {
-            bd.Save(txtNama.getText(), jComboBox1.getSelectedItem().toString(), txtJumlah.getText());
+            bd.Save(txtNama.getText(), cbTypeKabel.getSelectedItem().toString(), cbJumlahCore.getSelectedItem().toString(), cbRakKabel.getSelectedItem().toString());
             New();
         }
     }//GEN-LAST:event_btnSaveActionPerformed
@@ -256,7 +318,9 @@ public class BarangForm extends javax.swing.JFrame {
         int rowCount = jTable1.getSelectedRow();
         bd.setId(Integer.parseInt(jTable1.getValueAt(rowCount,0).toString()));
         txtNama.setText(jTable1.getValueAt( rowCount, 1).toString());
-        txtJumlah.setText(jTable1.getValueAt(rowCount, 3).toString());
+        cbTypeKabel.setSelectedItem(jTable1.getValueAt(rowCount, 2).toString());
+        cbJumlahCore.setSelectedItem(jTable1.getValueAt(rowCount, 3).toString());
+        cbRakKabel.setSelectedItem(jTable1.getValueAt(rowCount, 4).toString());
         
         btnSave.setEnabled(false);
         btnUpdate.setEnabled(true);
@@ -266,10 +330,14 @@ public class BarangForm extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(txtNama.getText().equals("")){
             JOptionPane.showMessageDialog(null, "Nama Barang Tidak Boleh Kosong !");
-        }else if(jComboBox1.getSelectedIndex()==0){
+        }else if(cbTypeKabel.getSelectedIndex()==0){
+            JOptionPane.showMessageDialog(null, "Silahkan Pilih Kategori !!");
+        }else if(cbJumlahCore.getSelectedIndex()==0){
+            JOptionPane.showMessageDialog(null, "Silahkan Pilih Kategori !!");
+        }else if(cbRakKabel.getSelectedIndex()==0){
             JOptionPane.showMessageDialog(null, "Silahkan Pilih Kategori !!");
         }else {
-            bd.Update(bd.getId(), txtNama.getText(), jComboBox1.getSelectedItem().toString(), txtJumlah.getText());
+            bd.Update(bd.getId(), txtNama.getText(), cbTypeKabel.getSelectedItem().toString(), cbJumlahCore.getSelectedItem().toString(), cbRakKabel.getSelectedItem().toString());
             New();
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
@@ -278,6 +346,25 @@ public class BarangForm extends javax.swing.JFrame {
         // TODO add your handling code here:
         rd.CetakDataBarang();
     }//GEN-LAST:event_btnDelete1ActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        // TODO add your handling code here:
+        int ok = JOptionPane.showConfirmDialog(null, "Apakah Anda Ingin Menghapus Data ?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
+        if(ok==0){
+            bd.Delete(bd.getId());
+            New();
+        }else{
+            New();
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void cbRakKabelItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbRakKabelItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbRakKabelItemStateChanged
+
+    private void cbRakKabelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbRakKabelActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbRakKabelActionPerformed
 
     /**
      * @param args the command line arguments
@@ -320,10 +407,15 @@ public class BarangForm extends javax.swing.JFrame {
     private javax.swing.JButton btnNew;
     private javax.swing.JButton btnSave;
     private javax.swing.JButton btnUpdate;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> cbJumlahCore;
+    private javax.swing.JComboBox<String> cbRakKabel;
+    private javax.swing.JComboBox<String> cbTypeKabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;

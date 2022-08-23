@@ -14,23 +14,34 @@ import java.sql.SQLException;
  * @author ariboss89
  */
 public class Koneksi {
-    public Connection conn;
+    public java.sql.Connection conn;
 
-    public Connection connect() {
-        try{
-       Class.forName("com.mysql.jdbc.Driver");
-       System.out.println("Berhasil koneksi ke JDBC Driver MySQL");
-    }catch(ClassNotFoundException ex){
-        System.out.println("Tidak Berhasil Koneksi ke JDBC Driver MySQL");
-    }
-    //koneksi ke data base
-    try{
-        String url="jdbc:mysql://localhost:3306/cahya";
-        conn = DriverManager.getConnection(url,"root","");
-        System.out.println("Berhasil koneksi ke Database");
-    }catch(SQLException e){
-        System.out.println("Tidak Berhasil Koneksi ke Database");
-    }
-    return conn;
+    public java.sql.Connection connect() {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            System.out.println("Berhasil Koneksi ke MySQL");
+
+            try {
+
+                String url = "jdbc:mysql://localhost:3306/cahya?"+ "autoReconnect=true&useSSL=false";
+
+                String user = "root";
+
+                String password = "";
+
+                conn = DriverManager.getConnection(url, user, password);
+
+                System.out.println("Koneksi sukses");
+
+            } catch (SQLException sqle) {
+
+                System.out.println("Koneksi gagal dilakukan");
+
+            }
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Gagal Koneksi ke MySQL");
+        }
+
+        return conn;
     }
 }

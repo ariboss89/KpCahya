@@ -15,6 +15,8 @@ import javax.swing.table.DefaultTableModel;
 public class tb_model {
     public void SetTabel(JTable tabel, String [][] data, String [] namaKolom, int jmlKolom, int [] lebar){
         tabel.setModel(new DefaultTableModel(data, namaKolom));
+       
+        tabel.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
         for (int i = 0; i<jmlKolom; i++)
             tabel.getColumnModel().getColumn(i).setPreferredWidth(lebar[i]);
     }   

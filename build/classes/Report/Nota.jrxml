@@ -5,7 +5,7 @@
 	<property name="ireport.y" value="0"/>
 	<parameter name="parameter1" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT tb_barangkeluar.Id, tb_barangkeluar.tanggal, tb_barangkeluar.total, dt_barangkeluar.nama, dt_barangkeluar.jumlah
+		<![CDATA[SELECT tb_barangkeluar.Id, tb_barangkeluar.tanggal, tb_barangkeluar.total, dt_barangkeluar.nama_kabel, dt_barangkeluar.jumlah, dt_barangkeluar.tahun
 FROM tb_barangkeluar, dt_barangkeluar
 WHERE tb_barangkeluar.Id = $P{parameter1}]]>
 	</queryString>
@@ -18,10 +18,13 @@ WHERE tb_barangkeluar.Id = $P{parameter1}]]>
 	<field name="total" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="nama" class="java.lang.String">
+	<field name="nama_kabel" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="jumlah" class="java.lang.String">
+	<field name="jumlah" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tahun" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<background>
@@ -108,18 +111,25 @@ WHERE tb_barangkeluar.Id = $P{parameter1}]]>
 				<reportElement x="0" y="22" width="555" height="20" uuid="6bb7e9e2-cdff-4ff3-a300-94dad375ca85"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="11" y="22" width="280" height="20" uuid="66fa0d41-764b-4115-88b0-604952aac659"/>
+				<reportElement x="11" y="22" width="227" height="20" uuid="66fa0d41-764b-4115-88b0-604952aac659"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[NAMA BARANG]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="291" y="22" width="253" height="20" uuid="d4836e6e-6f65-46cc-9273-8f040c581af5"/>
+				<reportElement x="238" y="22" width="129" height="20" uuid="d4836e6e-6f65-46cc-9273-8f040c581af5"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[JUMLAH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="367" y="22" width="177" height="20" uuid="a7799a0e-fe7d-4248-8006-4a671484bfbc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TAHUN]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -129,14 +139,19 @@ WHERE tb_barangkeluar.Id = $P{parameter1}]]>
 				<reportElement x="0" y="0" width="555" height="20" uuid="268d65f8-5a09-4f5f-ae6f-7fea83d99b43"/>
 			</rectangle>
 			<textField>
-				<reportElement x="11" y="0" width="280" height="20" uuid="10b01faa-1d08-4e1a-a854-716707dd1d41"/>
+				<reportElement x="11" y="0" width="227" height="20" uuid="10b01faa-1d08-4e1a-a854-716707dd1d41"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{nama}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nama_kabel}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="291" y="0" width="253" height="20" uuid="791f416f-c991-4b08-8f42-9da0b57a0dcf"/>
+				<reportElement x="238" y="0" width="129" height="20" uuid="791f416f-c991-4b08-8f42-9da0b57a0dcf"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{jumlah}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="367" y="0" width="177" height="20" uuid="92bab85e-304e-433d-b153-67e4fe40368c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{tahun}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

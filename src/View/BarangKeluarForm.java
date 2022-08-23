@@ -9,6 +9,7 @@ import Dao.BarangKeluarDao;
 import Dao.ReportDao;
 import Koneksi.Koneksi;
 import Model.tb_model;
+import Model.tb_pengguna;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -16,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -26,7 +28,7 @@ public class BarangKeluarForm extends javax.swing.JFrame {
 
     Koneksi con;
     Statement st;
-    ResultSet rs;
+    ResultSet rs, rsx;
 
     ReportDao rd = new ReportDao();
     BarangKeluarDao bkd = new BarangKeluarDao();
@@ -34,35 +36,60 @@ public class BarangKeluarForm extends javax.swing.JFrame {
     int Id;
     String nama, alamat, kontak;
     String[][] res;
-    String[] namaKolom = {"ID", "NAMA", "JUMLAH", "TANGGAL"};
+    String[] namaKolom = {"ID", "ID KABEL", "NAMA", "JUMLAH", "TANGGAL", "TAHUN"};
     int jmlKolom = namaKolom.length;
-    int[] lebar = {200, 500, 700, 300};
+    int[] lebar = {200, 200, 500, 700, 300, 200};
 
     public BarangKeluarForm() {
         initComponents();
         setLocationRelativeTo(this);
         ShowBarang();
+        btnRak.setEnabled(false);
+        cbRakKabel.setEnabled(false);
     }
 
     void New() {
-        txtKategori.setText("");
+        txtTypeKabel.setText("");
         txtJumlah.setText("");
-        jDateChooser1.setDate(null);
+        //jDateChooser1.setDate(null);
         btnSave.setEnabled(true);
-        jComboBox1.setSelectedIndex(0);
+        cbNamaKabel.setSelectedIndex(0);
+        btnRak.setEnabled(false);
+        cbRakKabel.setSelectedIndex(0);
+        cbRakKabel.setEnabled(false);
+        cbRakKabel.removeAll();
+        txtTahun.setText("");
+        txtJumlahCore.setText("");
     }
 
     void ShowBarang() {
         con = new Koneksi();
         try {
             st = con.connect().createStatement();
-            rs = st.executeQuery("SELECT *FROM tb_barang");
+            rs = st.executeQuery("SELECT distinct(nama_kabel) as nama FROM tb_barang");
             while (rs.next()) {
-                jComboBox1.addItem(rs.getString("nama_barang"));
+                cbNamaKabel.addItem(rs.getString("nama"));
             }
         } catch (SQLException ex) {
 
         }
+    }
+
+    void ShowRak(String kabel) {
+
+        try {
+            st = con.connect().createStatement();
+            rsx = st.executeQuery("SELECT DISTINCT(nomor_rak) as rak FROM tb_barang WHERE nama_kabel = '" + kabel + "'");
+
+            while(rsx.next()) {
+                cbRakKabel.addItem(rsx.getString("rak"));
+
+            }
+            
+        } catch (SQLException e) {
+
+        }
+
     }
 
     /**
@@ -86,9 +113,15 @@ public class BarangKeluarForm extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         btnTambah = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        txtKategori = new javax.swing.JTextField();
+        cbNamaKabel = new javax.swing.JComboBox<>();
+        txtTypeKabel = new javax.swing.JTextField();
         txtJumlah = new javax.swing.JTextField();
+        txtJumlahCore = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        cbRakKabel = new javax.swing.JComboBox<>();
+        jLabel10 = new javax.swing.JLabel();
+        txtTahun = new javax.swing.JTextField();
+        btnRak = new javax.swing.JButton();
         txtTotal = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
 
@@ -140,13 +173,13 @@ public class BarangKeluarForm extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel5.setText("NAMA BARANG");
+        jLabel5.setText("NAMA KABEL");
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel6.setText("KATEGORI BARANG");
+        jLabel6.setText("TYPE KABEL");
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel7.setText("JUMLAH BARANG");
+        jLabel7.setText("JUMLAH KABEL / METER");
 
         btnTambah.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnTambah.setText("TAMBAH");
@@ -156,23 +189,66 @@ public class BarangKeluarForm extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PILIH" }));
-        jComboBox1.addItemListener(new java.awt.event.ItemListener() {
+        cbNamaKabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        cbNamaKabel.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PILIH" }));
+        cbNamaKabel.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jComboBox1ItemStateChanged(evt);
+                cbNamaKabelItemStateChanged(evt);
             }
         });
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        cbNamaKabel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                cbNamaKabelActionPerformed(evt);
             }
         });
 
-        txtKategori.setEditable(false);
-        txtKategori.addActionListener(new java.awt.event.ActionListener() {
+        txtTypeKabel.setEditable(false);
+        txtTypeKabel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtKategoriActionPerformed(evt);
+                txtTypeKabelActionPerformed(evt);
+            }
+        });
+
+        txtJumlahCore.setEditable(false);
+        txtJumlahCore.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtJumlahCoreActionPerformed(evt);
+            }
+        });
+        txtJumlahCore.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtJumlahCoreKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtJumlahCoreKeyTyped(evt);
+            }
+        });
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel8.setText("JUMLAH CORE ");
+
+        cbRakKabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        cbRakKabel.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PILIH" }));
+        cbRakKabel.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbRakKabelItemStateChanged(evt);
+            }
+        });
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel10.setText("TAHUN");
+
+        txtTahun.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTahunActionPerformed(evt);
+            }
+        });
+
+        btnRak.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnRak.setText("LOAD NOMOR RAK");
+        btnRak.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRakActionPerformed(evt);
             }
         });
 
@@ -183,36 +259,61 @@ public class BarangKeluarForm extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtJumlah)
+                    .addComponent(cbNamaKabel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtTypeKabel)
+                            .addComponent(cbRakKabel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnRak, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(txtJumlah, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
+                                .addComponent(jLabel8)
+                                .addComponent(txtJumlahCore, javax.swing.GroupLayout.Alignment.TRAILING))))
+                    .addComponent(txtTahun, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
                             .addComponent(jLabel6)
                             .addComponent(jLabel5)
                             .addComponent(btnTambah, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtKategori))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(20, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cbNamaKabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel6)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtKategori, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16)
-                .addComponent(jLabel7)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtTypeKabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtJumlahCore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(13, 13, 13)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(btnRak))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtJumlah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(11, 11, 11)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtJumlah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbRakKabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtTahun, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnTambah)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         txtTotal.setEditable(false);
@@ -221,7 +322,7 @@ public class BarangKeluarForm extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 343, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -235,20 +336,20 @@ public class BarangKeluarForm extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
                             .addComponent(txtTotal)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel1)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                    .addComponent(jLabel4))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane1))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -263,14 +364,14 @@ public class BarangKeluarForm extends javax.swing.JFrame {
                         .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnSave)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -288,9 +389,9 @@ public class BarangKeluarForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtKategoriActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtKategoriActionPerformed
+    private void txtTypeKabelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTypeKabelActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtKategoriActionPerformed
+    }//GEN-LAST:event_txtTypeKabelActionPerformed
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         // TODO add your handling code here:
@@ -300,7 +401,7 @@ public class BarangKeluarForm extends javax.swing.JFrame {
         int jumlah = 0;
 
         for (int a = 0; a < jTable1.getRowCount(); a++) {
-            jumlah += Integer.parseInt(jTable1.getValueAt(a, 2).toString());
+            jumlah += Integer.parseInt(jTable1.getValueAt(a, 3).toString());
         }
 
         txtTotal.setText(String.valueOf(jumlah));
@@ -308,25 +409,21 @@ public class BarangKeluarForm extends javax.swing.JFrame {
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         // TODO add your handling code here:
-        if (txtKategori.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Nama Barang Tidak Boleh Kosong !");
-        } else if (jComboBox1.getSelectedIndex() == 0) {
-            JOptionPane.showMessageDialog(null, "Silahkan Pilih Kategori !!");
-        } else if (jDateChooser1.getDate() == null) {
+        if (jDateChooser1.getDate() == null) {
             JOptionPane.showMessageDialog(null, "Silahkan Pilih Tanggal");
         } else {
 
             int jumlah = bkd.ShowJumlah(bkd.getIdBarang());
-            int tambahan = Integer.parseInt(txtJumlah.getText());
-          //  int total = jumlah + tambahan;
+            int tambahan = Integer.parseInt(txtTotal.getText());
+            //  int total = jumlah + tambahan;
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String tanggal = sdf.format(jDateChooser1.getDate());
 
             String Id = bkd.IdKeluar();
-            bkd.Save(bkd.IdKeluar(), Date.valueOf(tanggal), tambahan);
-            
-            rd.CetakNota(Id);
+            bkd.Save(bkd.IdKeluar(), Date.valueOf(tanggal), tambahan, tb_pengguna.getUsername());
+
+            //rd.CetakNota(Id);
             New();
         }
     }//GEN-LAST:event_btnSaveActionPerformed
@@ -335,34 +432,42 @@ public class BarangKeluarForm extends javax.swing.JFrame {
         // TODO add your handling code here:       
     }//GEN-LAST:event_jTable1MouseClicked
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    private void cbNamaKabelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbNamaKabelActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    }//GEN-LAST:event_cbNamaKabelActionPerformed
 
-    private void jComboBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox1ItemStateChanged
+    private void cbNamaKabelItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbNamaKabelItemStateChanged
         // TODO add your handling code here:
+        btnRak.setEnabled(true);
+        
         con = new Koneksi();
         try {
             st = con.connect().createStatement();
-            rs = st.executeQuery("SELECT *FROM tb_barang WHERE nama_barang = '" + jComboBox1.getSelectedItem().toString() + "'");
+            rs = st.executeQuery("SELECT *FROM tb_barang WHERE nama_kabel = '" + cbNamaKabel.getSelectedItem().toString() + "'");
             if (rs.next()) {
-                bkd.setIdBarang(rs.getInt("Id"));
-                txtKategori.setText(rs.getString("kategori"));
+                //bmd.setId(rs.getInt("Id"));
+                txtTypeKabel.setText(rs.getString("type_kabel"));
+                txtJumlahCore.setText(rs.getString("jumlah_core"));
             }
+
         } catch (SQLException e) {
 
         }
 
-    }//GEN-LAST:event_jComboBox1ItemStateChanged
+    }//GEN-LAST:event_cbNamaKabelItemStateChanged
 
     private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
         // TODO add your handling code here:
-        if (txtKategori.getText().equals("")) {
+        if (txtTypeKabel.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Nama Barang Tidak Boleh Kosong !");
-        } else if (jComboBox1.getSelectedIndex() == 0) {
+        } else if (cbNamaKabel.getSelectedIndex() == 0) {
             JOptionPane.showMessageDialog(null, "Silahkan Pilih Kategori !!");
         } else if (jDateChooser1.getDate() == null) {
             JOptionPane.showMessageDialog(null, "Silahkan Pilih Tanggal");
+        } else if (cbRakKabel.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(null, "Silahkan Pilih Rak !!");
+        } else if (txtTahun.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Silahkan input tahun !!");
         } else {
 
             int jumlah = bkd.ShowJumlah(bkd.getIdBarang());
@@ -378,10 +483,54 @@ public class BarangKeluarForm extends javax.swing.JFrame {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 String tanggal = sdf.format(jDateChooser1.getDate());
 
-                bkd.SaveDetail(bkd.IdKeluar(), jComboBox1.getSelectedItem().toString(), Integer.parseInt(txtJumlah.getText()), Date.valueOf(tanggal));
+                bkd.SaveDetail(bkd.IdKeluar(), bkd.getIdBarang(), cbNamaKabel.getSelectedItem().toString(), txtTypeKabel.getText(), txtJumlahCore.getText(), cbRakKabel.getSelectedItem().toString(), total,
+                        Integer.parseInt(txtJumlah.getText()), Date.valueOf(tanggal), txtTahun.getText());
+                
+                New();
             }
         }
     }//GEN-LAST:event_btnTambahActionPerformed
+
+    private void txtJumlahCoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtJumlahCoreActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtJumlahCoreActionPerformed
+
+    private void cbRakKabelItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbRakKabelItemStateChanged
+        // TODO add your handling code here:
+        con = new Koneksi();
+        try {
+            st = con.connect().createStatement();
+            rs = st.executeQuery("SELECT *FROM tb_barang WHERE nama_kabel = '" + cbNamaKabel.getSelectedItem().toString() + "' AND nomor_rak='" + cbRakKabel.getSelectedItem().toString() + "'");
+
+            if (rs.next()) {
+                bkd.setIdBarang(rs.getInt("id_kabel"));
+//                txtTypeKabel.setText(rs.getString("type_kabel"));
+//                txtJumlahCore.setText(rs.getString("jumlah_core"));
+            }
+        } catch (SQLException e) {
+
+        }
+    }//GEN-LAST:event_cbRakKabelItemStateChanged
+
+    private void txtTahunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTahunActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTahunActionPerformed
+
+    private void txtJumlahCoreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtJumlahCoreKeyTyped
+        // TODO add your handling code here:
+         
+    }//GEN-LAST:event_txtJumlahCoreKeyTyped
+
+    private void txtJumlahCoreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtJumlahCoreKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtJumlahCoreKeyReleased
+
+    private void btnRakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRakActionPerformed
+        // TODO add your handling code here:
+        cbRakKabel.setEnabled(true);
+        cbRakKabel.removeAll();
+        ShowRak(cbNamaKabel.getSelectedItem().toString());
+    }//GEN-LAST:event_btnRakActionPerformed
 
     /**
      * @param args the command line arguments
@@ -422,22 +571,28 @@ public class BarangKeluarForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnRak;
     private javax.swing.JButton btnSave;
     private javax.swing.JButton btnTambah;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> cbNamaKabel;
+    private javax.swing.JComboBox<String> cbRakKabel;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField txtJumlah;
-    private javax.swing.JTextField txtKategori;
+    private javax.swing.JTextField txtJumlahCore;
+    private javax.swing.JTextField txtTahun;
     private javax.swing.JTextField txtTotal;
+    private javax.swing.JTextField txtTypeKabel;
     // End of variables declaration//GEN-END:variables
 }

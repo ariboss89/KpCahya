@@ -11,7 +11,7 @@ package Model;
  */
 public class dt_barangkeluar {
     String idDetailKeluar;
-
+    
     public String getIdDetailKeluar() {
         return idDetailKeluar;
     }

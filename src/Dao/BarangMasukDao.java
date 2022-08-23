@@ -29,7 +29,7 @@ public class BarangMasukDao extends tb_barangmasuk {
         con = new Koneksi();
         try{
             st = con.connect().createStatement();
-            res = st.executeQuery("SELECT *FROM tb_barang WHERE Id = '"+Id+"'");
+            res = st.executeQuery("SELECT *FROM tb_barang WHERE id_kabel = '"+Id+"'");
             if(res.next()){
                 jumlah = res.getInt("jumlah");
             }
@@ -41,12 +41,12 @@ public class BarangMasukDao extends tb_barangmasuk {
         return jumlah;
     }
     
-    public void Save(String nama, String kategori, int jumlah, Date tanggal) {
+    public void Save(int Id, String nama, String type, String core, String rak, int jumlah, Date tanggal, String tahun) {
         con = new Koneksi();
         con.connect();
         try {
             st = con.conn.createStatement();
-            query = "insert into tb_barangmasuk(nama, kategori, jumlah, tanggal)values('" + nama + "','" + kategori + "', '"+jumlah+"', '"+tanggal+"')";
+            query = "insert into tb_barangmasuk(id_kabel, nama_kabel, type_kabel, jumlah_core, nomor_rak , jumlah, tanggal, tahun)values('" + Id + "','" + nama + "','" + type + "','" + core + "','" + rak + "', '"+jumlah+"', '"+tanggal+"', '"+tahun+"')";
             st.executeUpdate(query);
             st.close();
             con.conn.close();
@@ -60,7 +60,7 @@ public class BarangMasukDao extends tb_barangmasuk {
         con.connect();
         try {
             st = con.conn.createStatement();
-            query = "update tb_barang set jumlah= '"+jumlah+"' where Id = '" + Id + "'";
+            query = "update tb_barang set jumlah= '"+jumlah+"' where id_kabel = '" + Id + "'";
             st.executeUpdate(query);
             st.close();
             con.conn.close();
@@ -85,21 +85,24 @@ public class BarangMasukDao extends tb_barangmasuk {
             }
             query = "select *from tb_barangmasuk";
             res = st.executeQuery(query);
-            data = new String[jumlahBaris][5];
+            data = new String[jumlahBaris][8];
             int r = 0;
             while (res.next()) {
                 data[r][0] = res.getString("Id");
-                data[r][1] = res.getString("nama");
-                data[r][2] = res.getString("kategori");
-                data[r][3] = res.getString("jumlah");
-                data[r][4] = res.getString("tanggal");
+                data[r][1] = res.getString("nama_kabel");
+                data[r][2] = res.getString("type_kabel");
+                data[r][3] = res.getString("jumlah_core");
+                data[r][4] = res.getString("nomor_rak");
+                data[r][5] = res.getString("jumlah");
+                data[r][6] = res.getString("tanggal");
+                data[r][7] = res.getString("tahun");
                 r++;
             }
             int jmlBaris = r;
             String[][] tmpArray = data;
-            data = new String[jmlBaris][5];
+            data = new String[jmlBaris][8];
             for (r = 0; r < jmlBaris; r++) {
-                for (int c = 0; c <5; c++) {
+                for (int c = 0; c <8; c++) {
                     data[r][c] = tmpArray[r][c];
                 }
             }
